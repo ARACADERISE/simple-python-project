@@ -1,0 +1,10 @@
+{
+  "MEMORY": {
+    "has_released": true,
+    "has_restored": true
+  },
+  "filename": "main.py",
+  "size": {
+    "bytes": 2874
+  }
+}
