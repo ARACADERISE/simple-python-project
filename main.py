@@ -32,7 +32,8 @@ class GatherFiles:
             write_file = open(self.filename+"..","w")
             for i in self.filecontents:
                 if not convert:
-                    write_file.write(ord(i))
+                    write_file.write(str(ord(i)))
+                    write_file.write(end)
                     # print(ord(i))
                 else:
                     write_file.write(str(ord(i)))
@@ -92,7 +93,7 @@ class GatherFiles:
 gf = GatherFiles("main.py")
 gf.RepFile()
 gf.SetSize()
-gf.MakeBit(convert=True)
+gf.MakeBit()
 gf.ReleaseMemory()
 gf.RestoreFile()
 gf.Save()
