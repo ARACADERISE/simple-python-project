@@ -25,6 +25,7 @@ class GatherFiles:
         ):
             file_ = open(self.filename,"r").read()
             self.filecontents = file_
+            self.hasCreatedNewFile = False
         else:
             with open(os.path.abspath(self.filename),'w') as file:
                 file.close()
@@ -48,7 +49,12 @@ class GatherFiles:
         if self.filecontents != "":
             write_file = open(self.filename+"..","w")
             if len(self.filecontents) > 4000000:
-                print('Making Bits...\n')
+              size = ''
+              if self.fileSize >= 1000000:
+                size = f'{int(self.fileSize/1000000)}mb'
+              else:
+                size = f'{self.fileSize}b'
+              print(f'Transforming {size} file into ASCII...\n')
 
             for i in self.LoadingBar(self.filecontents) if len(self.filecontents) > 4000000 else self.filecontents:
                 if not convert:
@@ -70,9 +76,13 @@ class GatherFiles:
     def ReleaseMemory(self):
         """Opens and deletes all file information"""
         if self.filecontents != "":
-            self.fileSize = int(0)
-            os.system("rm -rf {}".format(self.filename))
-            self.HasReleasedMemory = True
+          size = ''
+          if self.fileSize >= 1000000:size = f'{int(self.fileSize/1000000)}mb'
+          else: size = f'{self.fileSize}b'
+          print(f'Releasing {self.fileSize}')
+          self.fileSize = int(0)
+          os.system("rm -rf {}".format(self.filename))
+          self.HasReleasedMemory = True
         else:
             print(f"No content in file {self.filename} to release memory from.\n")
     
@@ -119,7 +129,7 @@ class GatherFiles:
             'filename' if not self.hasCreatedNewFile else 'Created File Name': self.filename,
             'extra info': extra if extra['New File Name'] != None else 'No Extra Information Informed',
             'size': {
-                'bytes':self.fileSize,
+                'bytes':self.fileSize if not self.fileSize > 1000000 else f'{int(self.fileSize/1000000)}mb',
                 'bits':self.fileSize*8 if not self.fileSize == None else self.fileSize,
                 #'Byte To Character':byte if len(byte) != 0 else 'No Information Informed',
             },
