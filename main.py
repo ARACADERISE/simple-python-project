@@ -20,12 +20,16 @@ class GatherFiles:
         ):
             file_ = open(self.filename,"r").read()
             self.filecontents = file_
+        else:
+            raise Exception(f"Error: File {self.filename} does not exist.\n")
     
     def SetSize(self):
         if self.filecontents != "":
             for i in range(len(self.filecontents)):
                 self.fileSize += 8
             self.fileSize = int(self.fileSize/8)
+        else:
+            print(f"No content in file {self.filename} to gather a standard size.\n")
     
     def MakeBit(self,convert=False,end=' '):
         if self.filecontents != "":
@@ -34,18 +38,18 @@ class GatherFiles:
                 if not convert:
                     write_file.write(str(ord(i)))
                     write_file.write(end)
-                    # print(ord(i))
                 else:
                     write_file.write(str(ord(i)))
                     write_file.write("\t")
                     write_file.write(chr(ord(i)))
                     write_file.write(end)
-                    # print(ord(i),"\t",chr(ord(i)))
                 self.BitContents.append(ord(i))
                 self.ArraySize+=1
             write_file.close()
 
             self.HasMadeBit = True
+        else:
+            print(f"No content in file {self.filename} to make into ASCII.\n")
     
     def ReleaseMemory(self):
         """Opens and deletes all file information"""
@@ -54,7 +58,10 @@ class GatherFiles:
                 f.write("")
                 f.close()
             self.fileSize = int(0)
+            os.system("rm -rf {}".format(self.filename))
             self.HasReleasedMemory = True
+        else:
+            print(f"No content in file {self.filename} to release memory from.\n")
     
     def RestoreFile(self):
         if self.filecontents != "":
@@ -68,16 +75,31 @@ class GatherFiles:
                 self.fileSize += 8
             self.fileSize = int(self.fileSize/8)
             self.HasRestoredFile = True
+        else:
+            print(f"The file {self.filename} had no memory to restore.\n")
 
     def Save(self):
+        extra = {'New File Name':None}
+        if not self.fileSize*8 >= 8:
+            if not self.filecontents == "":
+                for i in self.filecontents:
+                    self.fileSize += 8
+                self.fileSize = int(self.fileSize/8)
+            else:
+                print(self.filecontents)
+                self.fileSize = None
+        if os.path.exists(os.path.abspath(self.filename+'..')):
+            extra['New File Name'] = self.filename + '..'
+        
         DATA = {
-            "filename": self.filename,
-            "size": {
-                "bytes":self.fileSize
+            'filename': self.filename,
+            'extra info': extra,
+            'size': {
+                'bytes':self.fileSize
             },
-            "MEMORY":{
-                "has_released": self.HasReleasedMemory,
-                "has_restored": self.HasRestoredFile   
+            'MEMORY':{
+                'has_released': self.HasReleasedMemory,
+                'has_restored': self.HasRestoredFile   
             }
         }
         with open("info.json","w") as f:
@@ -90,10 +112,10 @@ class GatherFiles:
     
 
 
-gf = GatherFiles("main.py")
+gf = GatherFiles(input("File To Open: "))
 gf.RepFile()
 gf.SetSize()
 gf.MakeBit()
 gf.ReleaseMemory()
-gf.RestoreFile()
+#gf.RestoreFile()
 gf.Save()
