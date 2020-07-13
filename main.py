@@ -1,5 +1,6 @@
 # Simple Python project to check file sizes
 import os, json
+from tqdm import tqdm as t
 
 class GatherFiles:
     def __init__(self,filename):
@@ -12,6 +13,9 @@ class GatherFiles:
         self.HasRestoredFile = False
         self.hasCreatedNewFile = False
         self.fileSize = 0
+
+        # LOADING BAR
+        self.LoadingBar = t
     
     def RepFile(self):
         if os.path.isfile(
@@ -29,16 +33,25 @@ class GatherFiles:
     
     def SetSize(self):
         if self.filecontents != "":
-            for i in range(len(self.filecontents)):
-                self.fileSize += 8
+            if len(self.filecontents) > 4000000:
+                print('Loading Large File...\n')
+                for i in self.LoadingBar(self.filecontents):
+                    self.fileSize += 8
+            else:
+                for i in self.filecontents:
+                    self.fileSize += 8
             self.fileSize = int(self.fileSize/8)
+            #if self.fileSize/1000000 >= 1:
+                #self.fileSize = f'{self.fileSize/1000000}mb'
         else:
             print(f"No content in file {self.filename} to gather a standard size.\n")
     
     def MakeBit(self,convert=False,end=' '):
         if self.filecontents != "":
             write_file = open(self.filename+"..","w")
-            for i in self.filecontents:
+            if len(self.filecontents) > 4000000:
+                print('Making Bits...\n')
+            for i in self.LoadingBar(self.filecontents) if len(self.filecontents) > 4000000 else self.filecontents:
                 if not convert:
                     write_file.write(str(ord(i)))
                     write_file.write(end)
@@ -67,7 +80,9 @@ class GatherFiles:
     def RestoreFile(self):
         if self.filecontents != "":
             with open(self.filename,"w") as f:
-                for i in self.BitContents:
+                if len(self.filecontents) > 4000000:
+                    print('Restoring File ASCII contents...\n')
+                for i in self.LoadingBar(self.BitContents) if len(self.filecontents) > 4000000 else self.filecontents:
                     f.write(chr(i))
                 f.close()
             
@@ -87,7 +102,6 @@ class GatherFiles:
         for i in self.filecontents:
             bits += 8
             bytes_ = int(bits/8)
-            print(i)
             byte[i] = bytes_
            # byte.append(i+'->'+str(bytes_))
         bits = 0
@@ -97,7 +111,6 @@ class GatherFiles:
                     self.fileSize += 8
                 self.fileSize = int(self.fileSize/8)
             else:
-                print(self.filecontents)
                 self.fileSize = None
         if os.path.exists(os.path.abspath(self.filename+'..')):
             extra['New File Name'] = self.filename + '..'
@@ -108,7 +121,7 @@ class GatherFiles:
             'size': {
                 'bytes':self.fileSize,
                 'bits':self.fileSize*8 if not self.fileSize == None else self.fileSize,
-                'Byte To Character':byte if len(byte) != 0 else 'No Information Informed'
+                #'Byte To Character':byte if len(byte) != 0 else 'No Information Informed',
             },
             'MEMORY':{
                 'has_released': self.HasReleasedMemory,
