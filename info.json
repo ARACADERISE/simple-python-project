@@ -1,15 +1,14 @@
 {
+  "Created File Name": "bb",
+  "extra info": "No Extra Information Informed",
+  "size": {
+    "bytes": null,
+    "bits": null,
+    "Byte To Character": "No Information Informed"
+  },
   "MEMORY": {
     "has_released": false,
     "has_restored": false
   },
-  "extra info": {
-    "New File Name": null
-  },
-  "filename": "dt",
-  "size": {
-    "Byte To Character": {},
-    "bits": null,
-    "bytes": null
-  }
+  "New File": true
 }

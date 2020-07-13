@@ -10,6 +10,7 @@ class GatherFiles:
         self.HasMadeBit = False
         self.HasReleasedMemory = False
         self.HasRestoredFile = False
+        self.hasCreatedNewFile = False
         self.fileSize = 0
     
     def RepFile(self):
@@ -23,6 +24,7 @@ class GatherFiles:
         else:
             with open(os.path.abspath(self.filename),'w') as file:
                 file.close()
+            self.hasCreatedNewFile = True
             #raise Exception(f"Error: File {self.filename} does not exist.\n")
     
     def SetSize(self):
@@ -101,17 +103,18 @@ class GatherFiles:
             extra['New File Name'] = self.filename + '..'
         
         DATA = {
-            'filename': self.filename,
-            'extra info': extra,
+            'filename' if not self.hasCreatedNewFile else 'Created File Name': self.filename,
+            'extra info': extra if extra['New File Name'] != None else 'No Extra Information Informed',
             'size': {
                 'bytes':self.fileSize,
                 'bits':self.fileSize*8 if not self.fileSize == None else self.fileSize,
-                'Byte To Character':byte
+                'Byte To Character':byte if len(byte) != 0 else 'No Information Informed'
             },
             'MEMORY':{
                 'has_released': self.HasReleasedMemory,
                 'has_restored': self.HasRestoredFile   
-            }
+            },
+            'New File':self.hasCreatedNewFile
         }
         with open("info.json","w") as f:
             f.write(json.dumps(
