@@ -35,11 +35,9 @@ class GatherFiles:
         if self.filecontents != "":
             if len(self.filecontents) > 4000000:
                 print('Loading Large File...\n')
-                for i in self.LoadingBar(self.filecontents):
-                    self.fileSize += 8
-            else:
-                for i in self.filecontents:
-                    self.fileSize += 8
+
+            for i in self.LoadingBar(self.filecontents) if len(self.filecontents) > 4000000 else self.filecontents:
+                self.fileSize += 8
             self.fileSize = int(self.fileSize/8)
             #if self.fileSize/1000000 >= 1:
                 #self.fileSize = f'{self.fileSize/1000000}mb'
@@ -51,6 +49,7 @@ class GatherFiles:
             write_file = open(self.filename+"..","w")
             if len(self.filecontents) > 4000000:
                 print('Making Bits...\n')
+
             for i in self.LoadingBar(self.filecontents) if len(self.filecontents) > 4000000 else self.filecontents:
                 if not convert:
                     write_file.write(str(ord(i)))
@@ -82,6 +81,7 @@ class GatherFiles:
             with open(self.filename,"w") as f:
                 if len(self.filecontents) > 4000000:
                     print('Restoring File ASCII contents...\n')
+                    
                 for i in self.LoadingBar(self.BitContents) if len(self.filecontents) > 4000000 else self.filecontents:
                     f.write(chr(i))
                 f.close()
