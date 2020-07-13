@@ -80,6 +80,16 @@ class GatherFiles:
 
     def Save(self):
         extra = {'New File Name':None}
+        byte = {}
+        bits = 0
+        bytes_ = 0
+        for i in self.filecontents:
+            bits += 8
+            bytes_ = int(bits/8)
+            print(i)
+            byte[i] = bytes_
+           # byte.append(i+'->'+str(bytes_))
+        bits = 0
         if not self.fileSize*8 >= 8:
             if not self.filecontents == "":
                 for i in self.filecontents:
@@ -95,7 +105,9 @@ class GatherFiles:
             'filename': self.filename,
             'extra info': extra,
             'size': {
-                'bytes':self.fileSize
+                'bytes':self.fileSize,
+                'bits':self.fileSize*8 if not self.fileSize == None else self.fileSize,
+                'Byte To Character':byte
             },
             'MEMORY':{
                 'has_released': self.HasReleasedMemory,
