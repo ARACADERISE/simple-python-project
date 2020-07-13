@@ -1,19 +1,15 @@
 {
   "MEMORY": {
-    "has_released": true,
+    "has_released": false,
     "has_restored": false
   },
   "extra info": {
-    "New File Name": "t....."
+    "New File Name": null
   },
-  "filename": "t...",
+  "filename": "dt",
   "size": {
-    "Byte To Character": {
-      "e": 2,
-      "h": 1,
-      "y": 3
-    },
-    "bits": 24,
-    "bytes": 3
+    "Byte To Character": {},
+    "bits": null,
+    "bytes": null
   }
 }

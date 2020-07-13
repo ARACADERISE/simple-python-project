@@ -21,7 +21,9 @@ class GatherFiles:
             file_ = open(self.filename,"r").read()
             self.filecontents = file_
         else:
-            raise Exception(f"Error: File {self.filename} does not exist.\n")
+            with open(os.path.abspath(self.filename),'w') as file:
+                file.close()
+            #raise Exception(f"Error: File {self.filename} does not exist.\n")
     
     def SetSize(self):
         if self.filecontents != "":
@@ -54,9 +56,6 @@ class GatherFiles:
     def ReleaseMemory(self):
         """Opens and deletes all file information"""
         if self.filecontents != "":
-            with open(self.filename,"w") as f:
-                f.write("")
-                f.close()
             self.fileSize = int(0)
             os.system("rm -rf {}".format(self.filename))
             self.HasReleasedMemory = True
